@@ -11,6 +11,7 @@ find_package(std_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "action/GripperLedCommand.action"
+  "action/CalibratePose.action"
   "msg/CalibrationData.msg"
   "msg/CameraParameter.msg"
   "msg/CaptureConfig.msg"

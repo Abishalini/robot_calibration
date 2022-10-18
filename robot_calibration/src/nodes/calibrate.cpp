@@ -61,7 +61,7 @@
  *  calibrate calibration_poses.bag
  *  calibrate --from-bag calibration_data.bag
  */
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
   rclcpp::init(argc, argv);
   rclcpp::Node::SharedPtr node = std::make_shared<rclcpp::Node>("robot_calibration");
@@ -81,21 +81,31 @@ int main(int argc, char** argv)
   //  poses.bag         load poses from a bagfile and capture each pose
   std::string data_source("calibration_poses.yaml");
   if (argc > 1)
+  {
     data_source = argv[1];
+    std::cout << "data_source" << data_source << std::endl;
+  }
 
   if (data_source.compare("--from-bag") != 0)
   {
     // No name provided for a calibration bag file, must do capture
+    std::cout << "Create CaptureManager" << std::endl;
     robot_calibration::CaptureManager capture_manager;
     capture_manager.init(node);
 
+    std::cout << "Initialized capture manager with node" << std::endl;
+
     // Save URDF for calibration/export step
     description_msg.data = capture_manager.getUrdf();
+
+    std::cout << "Get URDF from capture manager" << std::endl;
 
     // Load a set of calibration poses
     std::vector<robot_calibration_msgs::msg::CaptureConfig> poses;
     if (data_source.compare("--manual") != 0)
     {
+      std::cout << "data_source: " << data_source << std::endl;
+      // Since manual not specified, search for YAML
       if (data_source.find(".yaml") != std::string::npos)
       {
         RCLCPP_INFO(logger, "Loading YAML calibration poses from %s", data_source.c_str());
@@ -171,7 +181,6 @@ int main(int argc, char** argv)
         RCLCPP_INFO(logger, "Captured pose %u of %lu", pose_idx + 1, poses.size());
       }
 
-
       // Add to samples
       data.push_back(msg);
     }
@@ -199,7 +208,7 @@ int main(int argc, char** argv)
 
   // Load calibration steps
   std::vector<std::string> calibration_steps =
-    node->declare_parameter<std::vector<std::string>>("calibration_steps", std::vector<std::string>());
+      node->declare_parameter<std::vector<std::string>>("calibration_steps", std::vector<std::string>());
   if (calibration_steps.empty())
   {
     RCLCPP_FATAL(logger, "Parameter calibration_steps is not defined");
@@ -211,6 +220,7 @@ int main(int argc, char** argv)
   {
     params.LoadFromROS(node, step);
     opt.optimize(params, data, logger, verbose);
+    opt.getOffsets()->writeToYAML("/home/abishalini/ws_studio/src/moveit_studio/moveit_studio_robot_config/kinova_gen3_lite_skills_center_config/calibration/camera_calibration.yaml");
     if (verbose)
     {
       std::cout << "Parameter Offsets:" << std::endl;

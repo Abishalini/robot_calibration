@@ -1,0 +1,14 @@
+# goal
+# the server needs to know what frames it should “calibrate”
+geometry_msgs/TransformStamped[] estimated_poses
+bool lookup_initial_estimate
+
+---
+# result
+geometry_msgs/TransformStamped[] calibrated_poses
+bool success
+
+---
+#feedback
+float32 percent_complete
+geometry_msgs/TransformStamped[] pose_updates

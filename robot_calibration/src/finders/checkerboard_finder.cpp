@@ -49,7 +49,9 @@ bool CheckerboardFinder::init(const std::string& name,
 
   // Setup subscriber
   std::string topic_name;
+  std::cout << "Name: " << name << std::endl;
   topic_name = node->declare_parameter<std::string>(name + ".topic", name + "/points");
+  std::cout << "Topic name: " << topic_name << std::endl;
   subscriber_ = node->create_subscription<sensor_msgs::msg::PointCloud2>(
     topic_name,
     rclcpp::QoS(1).reliable().keep_last(1),
@@ -87,8 +89,10 @@ bool CheckerboardFinder::init(const std::string& name,
 
 void CheckerboardFinder::cameraCallback(sensor_msgs::msg::PointCloud2::ConstSharedPtr cloud)
 {
+  std::cout << "Camera callback called" << std::endl;
   if (waiting_)
   {
+    std::cout << "Recieved point cloud" << std::endl;
     cloud_ = *cloud;
     waiting_ = false;
   }

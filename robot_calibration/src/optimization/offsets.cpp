@@ -26,6 +26,10 @@
 #include <robot_calibration/optimization/offsets.hpp>
 #include <robot_calibration/models/chain3d.hpp>  // for rotation functions
 
+#include <rclcpp/rclcpp.hpp>
+#include <yaml-cpp/yaml.h>
+
+static const rclcpp::Logger LOGGER = rclcpp::get_logger("robot_calibration.optimization.offsets");
 namespace robot_calibration
 {
 
@@ -215,6 +219,27 @@ std::string OptimizationOffsets::getOffsetYAML()
     ss << parameter_names_[i] << ": " << parameter_offsets_[i] << std::endl;
   }
   return ss.str();
+}
+
+void OptimizationOffsets::writeToYAML(const std::string& filename) 
+{
+  RCLCPP_INFO(LOGGER, "Writing offsets to %s", filename.c_str());
+
+  YAML::Emitter emitter;
+
+  emitter << YAML::BeginMap;
+
+  for (size_t i = 0; i < parameter_names_.size(); ++i)
+  {
+    emitter << YAML::Key << parameter_names_[i];
+    emitter << YAML::Value << parameter_offsets_[i];
+  }
+  
+  emitter << YAML::EndMap;
+
+  std::ofstream output_stream(filename);
+  output_stream << emitter.c_str();
+  output_stream.close();
 }
 
 std::string OptimizationOffsets::updateURDF(const std::string &urdf)

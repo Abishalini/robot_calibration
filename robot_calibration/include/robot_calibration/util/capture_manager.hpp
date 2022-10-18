@@ -29,29 +29,29 @@
 
 namespace robot_calibration
 {
-class CaptureManager
-{
-public:
-  CaptureManager();
-  bool init(rclcpp::Node::SharedPtr node);
-  bool moveToState(const sensor_msgs::msg::JointState& state);
-  bool captureFeatures(const std::vector<std::string>& feature_names,
-                       robot_calibration_msgs::msg::CalibrationData& msg);
-  std::string getUrdf();
+  class CaptureManager
+  {
+  public:
+    CaptureManager();
+    bool init(rclcpp::Node::SharedPtr node);
+    bool moveToState(const sensor_msgs::msg::JointState &state);
+    bool captureFeatures(const std::vector<std::string> &feature_names,
+                         robot_calibration_msgs::msg::CalibrationData &msg);
+    std::string getUrdf();
 
-private:
-  void callback(std_msgs::msg::String::ConstSharedPtr msg);
+  private:
+    void callback(std_msgs::msg::String::ConstSharedPtr msg);
 
-  rclcpp::Publisher<robot_calibration_msgs::msg::CalibrationData>::SharedPtr data_pub_;
-  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr urdf_sub_;
-  std::string description_;
-  bool description_valid_;
+    rclcpp::Publisher<robot_calibration_msgs::msg::CalibrationData>::SharedPtr data_pub_;
+    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr urdf_sub_;
+    std::string description_;
+    bool description_valid_;
 
-  robot_calibration::ChainManager* chain_manager_;
-  robot_calibration::FeatureFinderLoader feature_finder_loader_;
-  robot_calibration::FeatureFinderMap finders_;
-};
+    robot_calibration::ChainManager *chain_manager_;
+    robot_calibration::FeatureFinderLoader feature_finder_loader_;
+    robot_calibration::FeatureFinderMap finders_;
+  };
 
-}  // namespace robot_calibration
+} // namespace robot_calibration
 
-#endif  // ROBOT_CALIBRATION_UTIL_CAPTURE_MANAGER_HPP
+#endif // ROBOT_CALIBRATION_UTIL_CAPTURE_MANAGER_HPP

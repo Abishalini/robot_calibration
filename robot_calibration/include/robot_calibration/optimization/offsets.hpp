@@ -94,6 +94,8 @@ public:
   /** \brief Get all the current offsets as a YAML */
   std::string getOffsetYAML();
 
+  void writeToYAML(const std::string& filename);
+
   /** \brief Update the urdf with the new offsets */
   std::string updateURDF(const std::string& urdf);
 
